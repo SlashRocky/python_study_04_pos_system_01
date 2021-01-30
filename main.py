@@ -31,9 +31,9 @@ class Master(object):
     def ask_of_registering_products(self):
         while True:
             self.answer_of_register_producs = input('\n商品登録をしますか？ Yes or No で答えてね！\n\n')
-            if 'y' in self.answer_of_register_producs:
+            if 'y' in self.answer_of_register_producs.lower():
                 return True
-            elif 'n' in self.answer_of_register_producs:
+            elif 'n' in self.answer_of_register_producs.lower():
                 print('\nそれでは商品登録システムを終了します。')
                 return False
             else:
@@ -87,9 +87,9 @@ class Master(object):
     def ask_of_purchase(self):
         while True:
             self.answer_of_purchase = input('\n商品を購入しますか？ Yes or No で答えてね！\n\n')
-            if 'y' in self.answer_of_purchase:
+            if 'y' in self.answer_of_purchase.lower():
                 return True
-            elif 'n' in self.answer_of_purchase:
+            elif 'n' in self.answer_of_purchase.lower():
                 print('\n承知致しました。')
                 return False
             else:
