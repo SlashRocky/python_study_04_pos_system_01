@@ -84,6 +84,11 @@ class Master(object):
                 f.write('\t'.join(record))
                 f.write('\n')
 
+    def __del__(self):
+        pass
+
+
+class Order(object):
     def ask_of_purchase(self):
         while True:
             self.answer_of_purchase = input('\n商品を購入しますか？ Yes or No で答えてね！\n\n')
@@ -184,11 +189,13 @@ if __name__ == '__main__':
     if master.ask_of_registering_products():
         master.register_products()
     master.output_register_products()
-    if master.ask_of_purchase():
-        if master.check_inventory() == 'shopping_continue':
-            master.bill()
-            master.update_products_master()
-            master.output_receipt()
+    order = Order()
+    if order.ask_of_purchase():
+        if order.check_inventory() == 'shopping_continue':
+            order.bill()
+            order.update_products_master()
+            order.output_receipt()
         else:
             pass
+    del order
     del master
