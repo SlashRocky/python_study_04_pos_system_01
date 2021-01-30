@@ -144,35 +144,16 @@ class Master(object):
         now = datetime.datetime.now()
         output_receipt_time = now.strftime('%Y_%m%d_%H%M')
         time_for_receipt = now.strftime('%Y年%m月%d日 %H時%M分')
+        receipt_contents = time_for_receipt + '\n\n' \
+                           + '領収書' + '\n' \
+                           + self.target_product_name + '\n' \
+                           + '@¥' + str(self.target_product_price) + ' × ' + str(self.quantity_of_purchase) + '個' + '\n' \
+                           + '合計：¥' + str(self.total_of_purchase) + '\n' \
+                           + 'お預かり：' + str(self.payment_change) + '\n' \
+                           + 'お釣り：' + str(self.payment_change) + '\n'
 
         with open(f'./receipt/receipt_{output_receipt_time}.txt', 'w') as f:
-            f.write(time_for_receipt)
-            f.write('\n')
-
-            f.write('領収書')
-            f.write('\n')
-
-            f.write(self.target_product_name)
-            f.write('\n')
-
-            f.write('@¥')
-            f.write(str(self.target_product_price))
-            f.write(' × ')
-            f.write(str(self.quantity_of_purchase))
-            f.write('個')
-            f.write('\n')
-
-            f.write('合計：¥')
-            f.write(str(self.total_of_purchase))
-            f.write('\n')
-
-            f.write('お預かり：')
-            f.write(str(self.payment_amount))
-            f.write('\n')
-
-            f.write('お釣り：')
-            f.write(str(self.payment_change))
-            f.write('\n')
+            f.write(receipt_contents)
 
     def update_products_master(self):
 
