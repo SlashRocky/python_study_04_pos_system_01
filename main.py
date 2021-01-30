@@ -3,7 +3,7 @@ import os
 import datetime
 
 
-class Master(object):
+class RegisterProducts(object):
     def __init__(self):
         self.check_csv_file = os.path.exists('product_master.csv')
         self.fieldnames = ['CODE', 'NAME', 'PRICE', 'QUANTITY', 'TOTAL']
@@ -84,6 +84,14 @@ class Master(object):
                 f.write('\t'.join(record))
                 f.write('\n')
 
+    def __del__(self):
+        pass
+
+
+class PurchaseProducts(object):
+    def __init__(self):
+        pass
+
     def ask_of_purchase(self):
         while True:
             self.answer_of_purchase = input('\n商品を購入しますか？ Yes or No で答えてね！\n\n')
@@ -149,14 +157,28 @@ class Master(object):
                            + self.target_product_name + '\n' \
                            + '@¥' + str(self.target_product_price) + ' × ' + str(self.quantity_of_purchase) + '個' + '\n' \
                            + '合計：¥' + str(self.total_of_purchase) + '\n' \
-                           + 'お預かり：' + str(self.payment_change) + '\n' \
+                           + 'お預かり：' + str(self.payment_amount) + '\n' \
                            + 'お釣り：' + str(self.payment_change) + '\n'
 
         with open(f'./receipt/receipt_{output_receipt_time}.txt', 'w') as f:
             f.write(receipt_contents)
 
-    def update_products_master(self):
+    def pass_code_of_purchase(self):
+        return self.code_of_purchase
 
+    def pass_quantity_of_purchase(self):
+        return self.quantity_of_purchase
+
+    def __del__(self):
+        print('\nまたのご来店をお待ちしております！')
+
+
+class UpdateProductsData(object):
+    def __init__(self, code_of_purchase, quantity_of_purchase):
+        self.code_of_purchase = code_of_purchase
+        self.quantity_of_purchase = quantity_of_purchase
+
+    def update_products_master(self):
         with open('product_master.csv', 'r', encoding='UTF-8') as rf:
             reader = csv.reader(rf)
             # ヘッダー行を飛ばす
@@ -175,20 +197,26 @@ class Master(object):
                         writer.writerow([line[0], line[1], line[2], line[3], line[4]])
 
     def __del__(self):
-        print('\nまたのご来店をお待ちしております！')
+        pass
 
 
 if __name__ == '__main__':
-    master = Master()
-    master.display_product_list()
-    if master.ask_of_registering_products():
-        master.register_products()
-    master.output_register_products()
-    if master.ask_of_purchase():
-        if master.check_inventory() == 'shopping_continue':
-            master.bill()
-            master.update_products_master()
-            master.output_receipt()
+    register_products = RegisterProducts()
+    register_products.display_product_list()
+    if register_products.ask_of_registering_products():
+        register_products.register_products()
+    register_products.output_register_products()
+    del register_products
+    purchase_products = PurchaseProducts()
+    if purchase_products.ask_of_purchase():
+        if purchase_products.check_inventory() == 'shopping_continue':
+            purchase_products.bill()
+            purchase_products.output_receipt()
+            code_of_purchase = purchase_products.pass_code_of_purchase()
+            quantity_of_purchase = purchase_products.pass_quantity_of_purchase()
+            del purchase_products
+            update_products_data = UpdateProductsData(code_of_purchase, quantity_of_purchase)
+            update_products_data.update_products_master()
+            del update_products_data
         else:
             pass
-    del master
